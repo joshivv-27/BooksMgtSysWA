@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BooksMgtSysWA.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,20 @@ namespace BooksMgtSysWA.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        private BooksDBEntities db = new BooksDBEntities();
+
+        // GET: Books
+        //to filter data
+        public ActionResult Index(string searchString)
         {
-            return View();
+            var data = db.Books.ToList();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                data = data.Where(d => d.name.ToLower().Contains(searchString.ToLower())).ToList();
+            }
+
+            return View(data);
         }
 
         public ActionResult About()
