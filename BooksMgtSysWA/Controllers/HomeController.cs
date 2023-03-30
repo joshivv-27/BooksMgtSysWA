@@ -1,7 +1,10 @@
 ﻿using BooksMgtSysWA.Models;
+using BooksMgtSysWA.Models.SupportClasses;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -25,18 +28,54 @@ namespace BooksMgtSysWA.Controllers
             return View(data);
         }
 
-        public ActionResult About()
+        // GET: Books/Details/5
+        //modified to give better view -- VJ
+        public ActionResult Details(string id)
         {
-            ViewBag.Message = "Your application description page.";
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = db.Books.Find(id);
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            string sts = book.status.ToString();
+            bool isRes = false;
 
-            return View();
+            if (sts == "RS")
+            {
+                sts = "Reserved";
+                isRes = true;
+            }
+            else
+            {
+                sts = "Not Reserved";
+            }
+            ViewBag.sts = sts;
+            ViewBag.isRes = isRes;
+            SelectedBook.selBookID = book.id.ToString();
+            return View(book);
         }
 
-        public ActionResult Contact()
+        // POST: Books/BookRes/{selcted book}
+        // to update book status -- VJ
+        [HttpPost, ActionName("BookRes")]
+        [ValidateAntiForgeryToken]
+        public ActionResult BookRes()
         {
-            ViewBag.Message = "Your contact page.";
+            Book book = db.Books.Find("" + SelectedBook.selBookID); ;
 
-            return View();
+            if (ModelState.IsValid)
+            {
+                book.status = "RS";
+                book.booking_num = "" + book.id.ToString() + "C001";
+                db.Entry(book).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
