@@ -42,6 +42,7 @@ namespace BooksMgtSysWA.Controllers
                 return HttpNotFound();
             }
             string sts = book.status.ToString();
+            string bnum = book.booking_num;
             bool isRes = false;
 
             if (sts == "RS")
@@ -53,8 +54,15 @@ namespace BooksMgtSysWA.Controllers
             {
                 sts = "Not Reserved";
             }
+
+            if (bnum == "" || bnum == null)
+            {
+                bnum = "--";
+            }
+
             ViewBag.sts = sts;
             ViewBag.isRes = isRes;
+            ViewBag.bnum = bnum;
             SelectedBook.selBookID = book.id.ToString();
             return View(book);
         }

@@ -4,32 +4,33 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<center><h2>List of Books</h2></center>
+
 
 @using (Html.BeginForm("Index", "Home", FormMethod.Get))
 {
     <p>
         Search: @Html.TextBox("searchString")
-        <input type="submit" value="Filter" />
+        <input type="submit" value="Search Book" />
     </p>
 }
 
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.name)
+            Book Title
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.author)
+            Author
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.price)
+            Price
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.status)
+            Status
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.booking_num)
+            Booking Number
         </th>
         <th></th>
     </tr>
